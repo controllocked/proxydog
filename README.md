@@ -45,7 +45,7 @@ pip install -r requirements.txt
 ## Run
 
 ```bash
-python proxydog.py
+python3 proxydog.py
 ```
 
 After completion you will get `proxies.json` by default.
@@ -66,7 +66,7 @@ Main options are in `ProxyDog()` constructor:
 - Public proxies are unstable.
 - Some endpoints may rate-limit/block proxy traffic.
 - If progress looks stuck, it is usually waiting for timeouts on slow/broken proxies.
-
+- If the progress, on the contrary, seems inadequately fast, try to reduce the number of Sources. 
 ## License
 
 This project is licensed under the MIT License.  
