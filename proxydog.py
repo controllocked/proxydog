@@ -2,6 +2,7 @@ import asyncio
 import json
 import logging
 import time
+import random
 from dataclasses import dataclass
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Set, Tuple
 
@@ -22,60 +23,60 @@ class ProxyQuality:
 class ProxyDog:
     # Public proxy sources (quality may vary A LOT)
     _SOURCES: Tuple[str, ...] = (
-        'https://api.proxyscrape.com/v4/free-proxy-list/get?request=get_proxies&protocol=http&proxy_format=ipport&format=text&anonymity=Elite&timeout=20000',
-        'https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/http.txt',
-        'https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/http.txt',
-        'https://raw.githubusercontent.com/r00tee/Proxy-List/refs/heads/main/Https.txt',
-        'https://raw.githubusercontent.com/Vann-Dev/proxy-list/refs/heads/main/proxies/http.txt',
-        'https://raw.githubusercontent.com/Vann-Dev/proxy-list/refs/heads/main/proxies/https.txt',
-        'https://raw.githubusercontent.com/elliottophellia/proxylist/master/results/pmix_checked.txt',
-        'https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/protocols/http/data.txt',
-        'https://raw.githubusercontent.com/ALIILAPRO/Proxy/main/http.txt',
-        'https://raw.githubusercontent.com/andigwandi/free-proxy/main/proxy_list.txt',
-        'https://raw.githubusercontent.com/ErcinDedeoglu/proxies/main/proxies/http.txt',
-        'https://raw.githubusercontent.com/mmpx12/proxy-list/master/proxies.txt',
-        'https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/all.txt',
-        'https://raw.githubusercontent.com/monosans/proxy-list/main/proxies_anonymous/all.txt',
-        'https://raw.githubusercontent.com/roosterkid/openproxylist/main/HTTPS_RAW.txt',
-        'https://raw.githubusercontent.com/SevenworksDev/proxy-list/main/proxies/unknown.txt',
-        'https://raw.githubusercontent.com/sunny9577/proxy-scraper/master/proxies.txt',
-        'https://raw.githubusercontent.com/themiralay/Proxy-List-World/master/data.txt',
-        'https://raw.githubusercontent.com/Tsprnay/Proxy-lists/master/proxies/http.txt',
-        'https://raw.githubusercontent.com/TuanMinPay/live-proxy/master/http.txt',
-        'https://raw.githubusercontent.com/Zaeem20/FREE_PROXIES_LIST/master/http.txt',
-        'https://raw.githubusercontent.com/zevtyardt/proxy-list/main/http.txt',
-        'https://github.com/zloi-user/hideip.me/raw/refs/heads/master/http.txt',
-        'https://github.com/zloi-user/hideip.me/raw/refs/heads/master/connect.txt',
-        'https://raw.githubusercontent.com/dinoz0rg/proxy-list/main/scraped_proxies/http.txt',
-        'https://raw.githubusercontent.com/zebbern/Proxy-Scraper/main/http.txt',
-        'https://raw.githubusercontent.com/yemixzy/proxy-list/main/proxies/unchecked.txt',
-        'https://raw.githubusercontent.com/yemixzy/proxy-list/main/proxies/http.txt',
-        'https://raw.githubusercontent.com/vmheaven/VMHeaven-Free-Proxy-Updated/main/http.txt',
-        'https://raw.githubusercontent.com/saisuiu/Lionkings-Http-Proxys-Proxies/refs/heads/main/free.txt',
-        'https://raw.githubusercontent.com/FifzzSENZE/Master-Proxy/master/proxies/http.txt',
-        'https://raw.githubusercontent.com/fyvri/fresh-proxy-list/archive/storage/classic/http.txt',
-        'https://github.com/handeveloper1/Proxy/raw/refs/heads/main/Proxies-Ercin/http.txt',
-        'https://github.com/Anonym0usWork1221/Free-Proxies/raw/refs/heads/main/proxy_files/http_proxies.txt',
-        'https://github.com/zenjahid/FreeProxy4u/raw/refs/heads/main/http.txt',
-        'https://raw.githubusercontent.com/BreakingTechFr/Proxy_Free/refs/heads/main/proxies/http.txt',
-        'https://raw.githubusercontent.com/VolkanSah/Auto-Proxy-Fetcher/refs/heads/main/proxies.txt',
-        'https://raw.githubusercontent.com/databay-labs/free-proxy-list/refs/heads/master/http.txt',
-        'https://raw.githubusercontent.com/ProxyScraper/ProxyScraper/refs/heads/main/http.txt',
-        'https://raw.githubusercontent.com/variableninja/proxyscraper/refs/heads/main/proxies/http.txt',
-        'https://raw.githubusercontent.com/berkay-digital/Proxy-Scraper/refs/heads/main/proxies.txt',
-        'https://github.com/XigmaDev/proxy/raw/refs/heads/main/proxies.txt',
-        'https://github.com/chekamarue/proxies/raw/refs/heads/main/https.txt',
-        'https://github.com/chekamarue/proxies/raw/refs/heads/main/httpss.txt',
-        'https://github.com/claude89757/free_https_proxies/raw/refs/heads/main/https_proxies.txt',
-        'https://github.com/claude89757/free_https_proxies/raw/refs/heads/main/isz_https_proxies.txt',
-        'https://raw.githubusercontent.com/joy-deploy/free-proxy-list/refs/heads/main/data/latest/types/http/proxies.txt',
-        'https://github.com/andigwandi/free-proxy/raw/refs/heads/main/proxy_list.txt',
-        'https://raw.githubusercontent.com/parserpp/ip_ports/refs/heads/main/proxyinfo.txt',
-        'https://raw.githubusercontent.com/Firmfox/Proxify/refs/heads/main/proxies/http.txt',
-        'https://raw.githubusercontent.com/ebrasha/abdal-proxy-hub/refs/heads/main/http-proxy-list-by-EbraSha.txt',
-        'https://rootjazz.com/proxies/proxies.txt',
-        'https://api.proxyscrape.com/v3/free-proxy-list/get?request=displayproxies&protocol=http&proxy_format=ipport&format=text&timeout=20000',
-        'https://proxyspace.pro/http.txt',
+         'https://api.proxyscrape.com/v4/free-proxy-list/get?request=get_proxies&protocol=http&proxy_format=ipport&format=text&anonymity=Elite&timeout=20000',
+         'https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/http.txt',
+        # 'https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/http.txt',
+        # 'https://raw.githubusercontent.com/r00tee/Proxy-List/refs/heads/main/Https.txt',
+        # 'https://raw.githubusercontent.com/Vann-Dev/proxy-list/refs/heads/main/proxies/http.txt',
+        # 'https://raw.githubusercontent.com/Vann-Dev/proxy-list/refs/heads/main/proxies/https.txt',
+        # 'https://raw.githubusercontent.com/elliottophellia/proxylist/master/results/pmix_checked.txt',
+        # 'https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/protocols/http/data.txt',
+        # 'https://raw.githubusercontent.com/ALIILAPRO/Proxy/main/http.txt',
+        # 'https://raw.githubusercontent.com/andigwandi/free-proxy/main/proxy_list.txt',
+        # 'https://raw.githubusercontent.com/ErcinDedeoglu/proxies/main/proxies/http.txt',
+        # 'https://raw.githubusercontent.com/mmpx12/proxy-list/master/proxies.txt',
+        # 'https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/all.txt',
+        # 'https://raw.githubusercontent.com/monosans/proxy-list/main/proxies_anonymous/all.txt',
+        # 'https://raw.githubusercontent.com/roosterkid/openproxylist/main/HTTPS_RAW.txt',
+        # 'https://raw.githubusercontent.com/SevenworksDev/proxy-list/main/proxies/unknown.txt',
+        # 'https://raw.githubusercontent.com/sunny9577/proxy-scraper/master/proxies.txt',
+        # 'https://raw.githubusercontent.com/themiralay/Proxy-List-World/master/data.txt',
+        # 'https://raw.githubusercontent.com/Tsprnay/Proxy-lists/master/proxies/http.txt',
+        # 'https://raw.githubusercontent.com/TuanMinPay/live-proxy/master/http.txt',
+        # 'https://raw.githubusercontent.com/Zaeem20/FREE_PROXIES_LIST/master/http.txt',
+        # 'https://raw.githubusercontent.com/zevtyardt/proxy-list/main/http.txt',
+        # 'https://github.com/zloi-user/hideip.me/raw/refs/heads/master/http.txt',
+        # 'https://github.com/zloi-user/hideip.me/raw/refs/heads/master/connect.txt',
+        # 'https://raw.githubusercontent.com/dinoz0rg/proxy-list/main/scraped_proxies/http.txt',
+        # 'https://raw.githubusercontent.com/zebbern/Proxy-Scraper/main/http.txt',
+        # 'https://raw.githubusercontent.com/yemixzy/proxy-list/main/proxies/unchecked.txt',
+        # 'https://raw.githubusercontent.com/yemixzy/proxy-list/main/proxies/http.txt',
+        # 'https://raw.githubusercontent.com/vmheaven/VMHeaven-Free-Proxy-Updated/main/http.txt',
+        # 'https://raw.githubusercontent.com/saisuiu/Lionkings-Http-Proxys-Proxies/refs/heads/main/free.txt',
+        # 'https://raw.githubusercontent.com/FifzzSENZE/Master-Proxy/master/proxies/http.txt',
+        # 'https://raw.githubusercontent.com/fyvri/fresh-proxy-list/archive/storage/classic/http.txt',
+        # 'https://github.com/handeveloper1/Proxy/raw/refs/heads/main/Proxies-Ercin/http.txt',
+        # 'https://github.com/Anonym0usWork1221/Free-Proxies/raw/refs/heads/main/proxy_files/http_proxies.txt',
+        # 'https://github.com/zenjahid/FreeProxy4u/raw/refs/heads/main/http.txt',
+        # 'https://raw.githubusercontent.com/BreakingTechFr/Proxy_Free/refs/heads/main/proxies/http.txt',
+        # 'https://raw.githubusercontent.com/VolkanSah/Auto-Proxy-Fetcher/refs/heads/main/proxies.txt',
+        # 'https://raw.githubusercontent.com/databay-labs/free-proxy-list/refs/heads/master/http.txt',
+        # 'https://raw.githubusercontent.com/ProxyScraper/ProxyScraper/refs/heads/main/http.txt',
+        # 'https://raw.githubusercontent.com/variableninja/proxyscraper/refs/heads/main/proxies/http.txt',
+        # 'https://raw.githubusercontent.com/berkay-digital/Proxy-Scraper/refs/heads/main/proxies.txt',
+        # 'https://github.com/XigmaDev/proxy/raw/refs/heads/main/proxies.txt',
+        # 'https://github.com/chekamarue/proxies/raw/refs/heads/main/https.txt',
+        # 'https://github.com/chekamarue/proxies/raw/refs/heads/main/httpss.txt',
+        # 'https://github.com/claude89757/free_https_proxies/raw/refs/heads/main/https_proxies.txt',
+        # 'https://github.com/claude89757/free_https_proxies/raw/refs/heads/main/isz_https_proxies.txt',
+        # 'https://raw.githubusercontent.com/joy-deploy/free-proxy-list/refs/heads/main/data/latest/types/http/proxies.txt',
+        # 'https://github.com/andigwandi/free-proxy/raw/refs/heads/main/proxy_list.txt',
+        # 'https://raw.githubusercontent.com/parserpp/ip_ports/refs/heads/main/proxyinfo.txt',
+        # 'https://raw.githubusercontent.com/Firmfox/Proxify/refs/heads/main/proxies/http.txt',
+        # 'https://raw.githubusercontent.com/ebrasha/abdal-proxy-hub/refs/heads/main/http-proxy-list-by-EbraSha.txt',
+        # 'https://rootjazz.com/proxies/proxies.txt',
+        # 'https://api.proxyscrape.com/v3/free-proxy-list/get?request=displayproxies&protocol=http&proxy_format=ipport&format=text&timeout=20000',
+        # 'https://proxyspace.pro/http.txt',
     )
 
     # Light endpoints to quickly check if proxy works
@@ -101,8 +102,8 @@ class ProxyDog:
         self,
         *,
         src_concurrency: int = 15,
-        proxy_concurrency: int = 350,
-        quality_concurrency: int = 70,
+        proxy_concurrency: int = 200,
+        quality_concurrency: int = 50,
         batch_size: int = 10000,
         request_timeout_total: int = 20,
         log_level: int = logging.INFO,
@@ -166,14 +167,18 @@ class ProxyDog:
         """proxy should respond to GET"""
         try:
             async with session.get(
-                to_check,
-                proxy=f"http://{proxy}",
-                timeout=aiohttp.ClientTimeout(total=timeout),
-                allow_redirects=True,
+                    to_check,
+                    proxy=f"http://{proxy}",
+                    timeout=aiohttp.ClientTimeout(total=timeout),
+                    allow_redirects=True,
             ) as response:
-                return response.status < 400  # 200 or any redirect is fine
+                if response.status in (403, 429):
+                    await asyncio.sleep(0.2 + random.random() * 0.3)
+                    return False
+                return 200 <= response.status < 400
         except Exception:
-            await asyncio.sleep(0.05)
+            # Add small jitter to prevent a tight failure loop at high concurrency
+            await asyncio.sleep(0.05 + random.random() * 0.1)
             return False
 
     async def _get_seen_ip(
@@ -320,9 +325,7 @@ class ProxyDog:
             limit_per_host=0,
             ttl_dns_cache=300,
         )
-        timeout = aiohttp.ClientTimeout(total=self._request_timeout_total)
-
-        async with aiohttp.ClientSession(connector=connector, timeout=timeout) as session:
+        async with aiohttp.ClientSession(connector=connector) as session:
             src_sem = asyncio.Semaphore(self._src_concurrency)
 
             collected = await tqdm_asyncio.gather(
