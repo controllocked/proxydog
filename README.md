@@ -1,7 +1,7 @@
 # ProxyDog 🐶
 
 
-A small asynchronous script to collect public HTTP proxies from open sources and filter them in 2 steps:
+A small asynchronous utility to collect public HTTP proxies from open sources and filter them in 2 steps:
 
 1. **Primary filtering**: checks that a proxy responds to a simple HTTP request and can also reach an HTTPS URL. Also removes **transparent** proxies.
 2. **Quality filtering**: measures latency and checks a few popular websites.
